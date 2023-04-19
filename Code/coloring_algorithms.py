@@ -13,7 +13,7 @@ G.add_edge(7, 6)
 print(G.degree())
 
 
-def greedy(G, nodes: list):
+def greedy(G, nodes: list, color_with_interchange=False):
     """
     A greedy coloring algorithm for coloring the nodes of a graph G in order given by list order.
     returns coloring and number of used colors
@@ -31,6 +31,7 @@ def greedy(G, nodes: list):
     ), "incorrect order provided, some nodes appear more than one"
 
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
+    max_color = 1  # additional variable to help with interchange of colors
 
     # Iterate over the nodes of the graph in descending order of degree
     for node in nodes:
@@ -42,6 +43,8 @@ def greedy(G, nodes: list):
         # Find the first available color that is not used by any neighbor
         for color in range(1, len(G) + 1):
             if color not in neighbor_colors:
+                if color_with_interchange and color > max_color:
+                    pass  # search for better
                 # Assign the color to the node
                 node_colors[node] = color
                 break
@@ -107,6 +110,10 @@ def smallest_last(G):
 
     coloring, chromatic_number = greedy(G, order[::-1])  # greedy on reverse order
     return coloring, chromatic_number
+
+
+def try_interchanging_colors(G, node, node_colors):
+    pass
 
 
 print(smallest_last(G))
