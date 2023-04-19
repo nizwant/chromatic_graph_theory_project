@@ -2,9 +2,15 @@ from collections import defaultdict
 import networkx as nx
 import random
 
-G = nx.cycle_graph(5)
-G.add_edge(1, 4)
-G.add_edge(4, 2)
+G = nx.cycle_graph(7)
+G.add_edge(7, 0)
+G.add_edge(7, 1)
+G.add_edge(7, 2)
+G.add_edge(7, 3)
+G.add_edge(7, 4)
+G.add_edge(7, 5)
+G.add_edge(7, 6)
+print(G.degree())
 
 
 def greedy(G, nodes: list):
@@ -99,7 +105,8 @@ def smallest_last(G):
         order.append(min_degree_vertex)  # Add the removed vertex to the order list
         min_degree += -1
 
-    return order
+    coloring, chromatic_number = greedy(G, order[::-1])  # greedy on reverse order
+    return coloring, chromatic_number
 
 
-smallest_last(G)
+print(smallest_last(G))
