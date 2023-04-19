@@ -43,8 +43,10 @@ def greedy(G, nodes: list, color_with_interchange=False):
         # Find the first available color that is not used by any neighbor
         for color in range(1, len(G) + 1):
             if color not in neighbor_colors:
-                if color_with_interchange and color > max_color:
-                    pass  # search for better
+                if (
+                    color_with_interchange and color > max_color
+                ):  # if new color is needed
+                    color = try_interchanging_colors(G, node, node_colors, color)
                 # Assign the color to the node
                 node_colors[node] = color
                 break
@@ -189,8 +191,14 @@ def d_satur_with_interchange(G):
     return coloring, chromatic_number
 
 
-def try_interchanging_colors(G, node, node_colors):
-    return
+def try_interchanging_colors(G, node, node_colors, color):
+    best_color = color
+    # 1 wyznacz zbiór sąsiadów node którzy są pokolorowani tylko jednym kolorem
+    # 2 dla każdego sprawdź czy nie mają jakiegoś wolnego kolora
+    # 3 jeżeli mają to przekoloruj go i node przekoloruj na kolor ktorym byl pokolorowany sasiad
+    # 4 funkcja modyfikuje słownik kolorów jeżeli się da i to coś da i zwraca kolor na ktory moze byc pokolorwany node
+    # 5 jezeli da sie pokolorowac to modyfikuje best_color jezeli nie to nie rusza go i kolor jest nie zmieniony
+    return best_color
 
 
 print(smallest_last(G))
