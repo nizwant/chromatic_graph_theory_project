@@ -193,7 +193,21 @@ def d_satur_with_interchange(G):
 
 def try_interchanging_colors(G, node, node_colors, color):
     best_color = color
-    # 1 wyznacz zbiór sąsiadów node którzy są pokolorowani tylko jednym kolorem
+    colors_neighbors = defaultdict(set)
+
+    # Iterate over all neighbors of the node in order to create colors_neighbors
+    # dictionary with key:value pairs color:{nodes_that_have_this_color}
+    for neighbor in G.neighbors(node):
+        if node in node_colors:
+            colors_neighbors[node_colors[node]].add(neighbor)
+
+    valid_neighbors = []
+    for color, set_of_neighbors in colors_neighbors.items():
+        if len(set_of_neighbors) == 1:
+            valid_neighbors.append([set_of_neighbors.pop(), color])
+
+    for node in valid_neighbors:
+        pass
     # 2 dla każdego sprawdź czy nie mają jakiegoś wolnego kolora
     # 3 jeżeli mają to przekoloruj go i node przekoloruj na kolor ktorym byl pokolorowany sasiad
     # 4 funkcja modyfikuje słownik kolorów jeżeli się da i to coś da i zwraca kolor na ktory moze byc pokolorwany node
