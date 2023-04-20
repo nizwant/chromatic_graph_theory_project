@@ -198,20 +198,32 @@ def try_interchanging_colors(G, node, node_colors, color):
     # Iterate over all neighbors of the node in order to create colors_neighbors
     # dictionary with key:value pairs color:{nodes_that_have_this_color}
     for neighbor in G.neighbors(node):
-        if node in node_colors:
-            colors_neighbors[node_colors[node]].add(neighbor)
+        if neighbor in node_colors:
+            colors_neighbors[node_colors[neighbor]].add(neighbor)
 
     valid_neighbors = []
+    # select nodes that have unique color in set of neighbor
     for color, set_of_neighbors in colors_neighbors.items():
         if len(set_of_neighbors) == 1:
             valid_neighbors.append([set_of_neighbors.pop(), color])
 
-    for node in valid_neighbors:
-        pass
-    # 2 dla każdego sprawdź czy nie mają jakiegoś wolnego kolora
-    # 3 jeżeli mają to przekoloruj go i node przekoloruj na kolor ktorym byl pokolorowany sasiad
-    # 4 funkcja modyfikuje słownik kolorów jeżeli się da i to coś da i zwraca kolor na ktory moze byc pokolorwany node
-    # 5 jezeli da sie pokolorowac to modyfikuje best_color jezeli nie to nie rusza go i kolor jest nie zmieniony
+    breaker = False
+    for valid_neighbor, color in valid_neighbors:
+        colors_neighbor_neighbors = {}
+        for neighbor_of_valid_neighbor in G.neighbors(valid_neighbor):
+            if neighbor_of_valid_neighbor in node_colors:
+                colors_neighbor_neighbors.add(node_colors[neighbor_of_valid_neighbor])
+
+        for i in range(1, color):
+            if i not in colors_neighbor_neighbors:
+                node_colors[valid_neighbor] = i
+                best_color = color
+                breaker = True
+                break
+
+        if breaker:
+            break
+
     return best_color
 
 
