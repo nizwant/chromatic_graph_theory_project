@@ -1,40 +1,37 @@
 from collections import defaultdict
 import networkx as nx
+import matplotlib.pyplot as plt
 import random
 
-G = nx.cycle_graph(7)
-G.add_edge(7, 0)
-G.add_edge(7, 1)
-G.add_edge(7, 2)
-G.add_edge(7, 3)
-G.add_edge(7, 4)
-G.add_edge(7, 5)
-G.add_edge(7, 6)
-print(G.degree())
+
+G = nx.erdos_renyi_graph(100, 0.5)
+
+nx.draw(G, with_labels=True)
+plt.show()
 
 
-def greedy(G, nodes: list, color_with_interchange=False):
+def greedy(G, order: list, color_with_interchange=False):
     """
     A greedy coloring algorithm for coloring the nodes of a graph G in order given by list order.
     returns coloring and number of used colors
     """
 
-    # if nodes is empty then return 0
-    if not nodes:
+    # if order is empty then return 0
+    if not order:
         return None, 0
 
-    assert len(nodes) == len(
+    assert len(order) == len(
         G
     ), "incorrect order provided, all nodes have to be in order"
-    assert len(nodes) == len(
-        set(nodes)
+    assert len(order) == len(
+        set(order)
     ), "incorrect order provided, some nodes appear more than one"
 
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
     max_color = 1  # additional variable to help with interchange of colors
 
-    # Iterate over the nodes of the graph in descending order of degree
-    for node in nodes:
+    # Iterate over the nodes of the graph in given order
+    for node in order:
         # Find the colors of the neighboring nodes
         neighbor_colors = set(
             node_colors.get(neighbor) for neighbor in G.neighbors(node)
@@ -47,6 +44,7 @@ def greedy(G, nodes: list, color_with_interchange=False):
                     color_with_interchange and color > max_color
                 ):  # if new color is needed
                     color = try_interchanging_colors(G, node, node_colors, color)
+                    max_color = max(max_color, color)
                 # Assign the color to the node
                 node_colors[node] = color
                 break
@@ -78,7 +76,6 @@ def largest_first(G):
     # obtain list of nodes in graph G and sort it
     order = G.nodes()
     order = sorted(order, key=lambda x: G.degree(x), reverse=True)
-    print(order)
 
     # use greedy on it
     coloring, chromatic_number = greedy(G, order)
@@ -89,7 +86,6 @@ def largest_first_with_interchange(G):
     # obtain list of nodes in graph G and sort it
     order = G.nodes()
     order = sorted(order, key=lambda x: G.degree(x), reverse=True)
-    print(order)
 
     # use greedy on it
     coloring, chromatic_number = greedy(G, order, color_with_interchange=True)
@@ -191,8 +187,8 @@ def d_satur_with_interchange(G):
     return coloring, chromatic_number
 
 
-def try_interchanging_colors(G, node, node_colors, color):
-    best_color = color
+def try_interchanging_colors(G, node, node_colors, proposed_color):
+    best_color = proposed_color
     colors_neighbors = defaultdict(set)
 
     # Iterate over all neighbors of the node in order to create colors_neighbors
@@ -209,12 +205,12 @@ def try_interchanging_colors(G, node, node_colors, color):
 
     breaker = False
     for valid_neighbor, color in valid_neighbors:
-        colors_neighbor_neighbors = {}
+        colors_neighbor_neighbors = set()
         for neighbor_of_valid_neighbor in G.neighbors(valid_neighbor):
             if neighbor_of_valid_neighbor in node_colors:
                 colors_neighbor_neighbors.add(node_colors[neighbor_of_valid_neighbor])
 
-        for i in range(1, color):
+        for i in range(1, proposed_color):
             if i not in colors_neighbor_neighbors:
                 node_colors[valid_neighbor] = i
                 best_color = color
@@ -227,4 +223,5 @@ def try_interchanging_colors(G, node, node_colors, color):
     return best_color
 
 
-print(smallest_last(G))
+print(largest_first(G))
+print(largest_first_with_interchange(G))
