@@ -1,0 +1,10 @@
+1. Unit tests
+2. Working in docker
+3. Wraper with basic utilitis + argument draw_graph and draw_coloring
+4. more advance utilitis ie. when interchange kick in or how long it taked
+graphs or data necessary do draw such graphs iteration vs color used 
+iteraion vs time and what part of this was interchange did interchange    
+suceeded
+5. Dsatur
+6. Planar graphs
+ 
