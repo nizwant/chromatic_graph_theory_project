@@ -125,19 +125,37 @@ def smallest_last_with_interchange(G):
     return smallest_last(G, color_with_interchange=True)
 
 
-def d_satur(G):
-    order = []
-    # TODO inplementacja ona tu i tu powinna byc identyczna
-    # wiem że mozna to zrobic ładniej ale chce funkcje z osobnymi nazwami a nie np jako argument
-    coloring, chromatic_number = greedy(G, order[::-1])
-    return coloring, chromatic_number
+def d_satur(G, color_with_interchange=False):
+    n = len(G)
+    satur = {i: 0 for i in range(n)}  # We will be dropping colored nodes
+    node_colors = {}  # A dictionary to keep track of the color assigned to each node
+    max_color = 1
+    for i in range(n):
+        nodes = [
+            node
+            for node, saturation in satur.items()
+            if saturation == max(satur.values())
+        ]
+        # Looking all max saturation nodes
+        degrees = {node: G.degree(node) for node in nodes}
+        # Dict with all max saturation nodes and their degrees
+        node = max(degrees, key=degrees.get)
+        # Get node with max degree and color it
+        node_colors, max_color = color_node(
+            G, node, node_colors, max_color, color_with_interchange
+        )
+        # Remove colored node from satur dict
+        del satur[node]
+        # Update saturation of uncolored neighbors of node
+        for neighbor in G.neighbors(node):
+            if neighbor in satur:
+                satur[neighbor] += 1
+
+    return node_colors, max_color
 
 
 def d_satur_with_interchange(G):
-    order = []
-    # TODO inplementacja
-    coloring, chromatic_number = greedy(G, order[::-1], color_with_interchange=True)
-    return coloring, chromatic_number
+    return d_satur(G, color_with_interchange=True)
 
 
 def try_interchanging_colors(G, node, node_colors, proposed_color):

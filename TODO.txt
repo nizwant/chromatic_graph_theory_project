@@ -5,6 +5,6 @@
 graphs or data necessary do draw such graphs iteration vs color used 
 iteraion vs time and what part of this was interchange did interchange    
 suceeded
-5. Dsatur
+5. need repair interchange algorithm - its not working correctly
 6. Planar graphs
  
