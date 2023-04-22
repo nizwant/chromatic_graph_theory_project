@@ -32,24 +32,24 @@ def greedy(G, order: list, color_with_interchange=False):
 
     # Iterate over the nodes of the graph in given order
     for node in order:
-        # Find the colors of the neighboring nodes
-        neighbor_colors = set(
-            node_colors.get(neighbor) for neighbor in G.neighbors(node)
+        node_colors, max_color = color_node(
+            G, node, node_colors, max_color, color_with_interchange
         )
 
-        # Find the first available color that is not used by any neighbor
-        for color in range(1, len(G) + 1):
-            if color not in neighbor_colors:
-                if (
-                    color_with_interchange and color > max_color
-                ):  # if new color is needed
-                    color = try_interchanging_colors(G, node, node_colors, color)
-                    max_color = max(max_color, color)
-                # Assign the color to the node
-                node_colors[node] = color
-                break
-
     return node_colors, max(node_colors.values())
+
+
+def color_node(G, node, node_colors, max_color, color_with_interchange):
+    # Find the colors of the neighbors of node
+    neighbor_colors = set(node_colors.get(neighbor) for neighbor in G.neighbors(node))
+    # Find the first available color that is not used by any neighbor
+    for color in range(1, len(G) + 1):
+        if color not in neighbor_colors:
+            if color_with_interchange and color > max_color:  # if new color is needed
+                color = try_interchanging_colors(G, node, node_colors, color)
+            # Assign the color to the node
+            node_colors[node] = color
+            return node_colors, max(color, max_color)
 
 
 def random_sequential(G):
