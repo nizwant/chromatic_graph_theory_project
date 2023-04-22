@@ -42,15 +42,12 @@ print(G.degree())
 
 
 def color(G, node, node_colors, max_color, color_with_interchange=False):
-    neighbor_colors = set(
-        node_colors.get(neighbor) for neighbor in G.neighbors(node)
-    )
+    # Find the colors of the neighbors of node
+    neighbor_colors = set(node_colors.get(neighbor) for neighbor in G.neighbors(node))
     # Find the first available color that is not used by any neighbor
     for color in range(1, len(G) + 1):
         if color not in neighbor_colors:
-            if (
-                    color_with_interchange and color > max_color
-            ):  # if new color is needed
+            if color_with_interchange and color > max_color:  # if new color is needed
                 color = try_interchanging_colors(G, node, node_colors, color)
             # Assign the color to the node
             node_colors[node] = color
@@ -79,7 +76,9 @@ def greedy(G, nodes: list, color_with_interchange=False):
 
     # Iterate over the nodes of the graph in descending order of degree
     for node in nodes:
-        node_colors, max_color = color(G, node, node_colors, max_color, color_with_interchange)
+        node_colors, max_color = color(
+            G, node, node_colors, max_color, color_with_interchange
+        )
 
     return node_colors, max_color
 
@@ -152,18 +151,25 @@ def d_satur(G, color_with_interchange=False):
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
     max_color = 1
     for i in range(n):
-        nodes = [node for node, saturation in satur.items() if saturation == max(satur.values())]
+        nodes = [
+            node
+            for node, saturation in satur.items()
+            if saturation == max(satur.values())
+        ]
         # Looking all max saturation nodes
         degrees = {node: G.degree(node) for node in nodes}
         # Dict with all max saturation nodes and their degrees
         node = max(degrees, key=degrees.get)
         # Get node with max degree and color it
-        node_colors, max_color = color(G, node, node_colors, max_color, color_with_interchange)
+        node_colors, max_color = color(
+            G, node, node_colors, max_color, color_with_interchange
+        )
         # Remove colored node from satur dict
         del satur[node]
         # Update saturation of uncolored neighbors of node
         for neighbor in G.neighbors(node):
-            if neighbor in satur: satur[neighbor] += 1
+            if neighbor in satur:
+                satur[neighbor] += 1
 
     return node_colors, max_color
 
