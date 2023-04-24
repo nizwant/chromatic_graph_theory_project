@@ -1,0 +1,36 @@
+Aktualnie mamy napisane i przetestowane algorytmy kolorujące: 
+- Random Sequential
+- Largest First
+- Smallest Last
+- DSatur
+
+Algorytm do przekolorowania mamy już też napisany i działa a przynajmniej 
+tak sie nam wydaje bo nie jest jeszcze przetestowany, aczkolwiek wyniki z 
+niego są sensowne. 
+
+Jesteśmy w trakcie pisania tzw. wrapperów czyli funkcji 
+analizujących szybkośc wykonywania algorytmów i zbierających dane o 
+przekolorowaniu. Od dokumentacji wstępniej troszkę rzeczy się zmieniło w 
+naszym podejściu. Nie chcemy już implementować sami od podstaw grafów, 
+operacji na nich oraz ich generowania. Nie jest to celem tego przedmiotu i 
+projektu, oraz nie niesie to żadnych wartości edukacyjnych. 
+Korzystamy z pythonowego pakietu networkx, zamiast implementacji wyżej 
+wymienionych komponentów porównamy nasze algorytmy kolorowania z 
+tymi z pakietu networkx. Jesteśmy ciekawi jak wypadniemy na ich tle.
+
+
+Jeżeli starczy nam czasu i chęci (to pierwsze jest raczej decydującym czynnikiem),
+to zadbamy o jakąś funkcjonalność wizualizacji kolorowania grafów oraz dynamicznej
+wizualizacji zachowania danych algorytmów. Nie chcemy jednak nic obiecywać.
+
+
+Dodatkowo zamierzamy (bardziej hobbystycznie) napisać testy jednostkowe, 
+żeby zapewnić jak najwyższą jakość kodu i być pewnym, że generujemy 
+poprawne rozwiązania. Planujemy też wdrożyć pewne rozwiązania dev-ops 
+takie jak docker czy automatyczne wykonywanie testów jednostkowych w 
+naszym repozytorium.   
+
+Kod i wszelakie inne materiały znajdują się właśnie tam, 
+link: https://github.com/nizwant/Kolorowanie_Grafow
+
+Planujemy skończyć w majówke (marzenia ściętej głowy)
