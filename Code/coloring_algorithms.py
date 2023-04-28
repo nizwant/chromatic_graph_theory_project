@@ -5,9 +5,10 @@ import random
 
 
 G = nx.erdos_renyi_graph(100, 0.5)
+H = nx.complete_graph(10)
 
-nx.draw(G, with_labels=True)
-plt.show()
+# nx.draw(G, with_labels=True)
+# plt.show()
 
 
 def greedy(G, order: list, color_with_interchange=False):
@@ -182,7 +183,7 @@ def try_interchanging_colors(G, node, node_colors, proposed_color):
                 colors_neighbor_neighbors.add(node_colors[neighbor_of_valid_neighbor])
 
         for i in range(1, proposed_color):
-            if i not in colors_neighbor_neighbors:
+            if i not in colors_neighbor_neighbors and i != color:
                 node_colors[valid_neighbor] = i
                 best_color = color
                 breaker = True
@@ -196,3 +197,4 @@ def try_interchanging_colors(G, node, node_colors, proposed_color):
 
 print(largest_first(G))
 print(largest_first_with_interchange(G))
+print(largest_first_with_interchange(H))
