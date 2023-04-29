@@ -8,3 +8,4 @@ suceeded
 5. need repair interchange algorithm - its not working correctly
 6. Planar graphs
 7. Funkcja wywołująca wszytskie kolorowania i jakieś statystyki pokazująca 
+8. porownanie z klikowa liczba

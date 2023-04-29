@@ -11,12 +11,12 @@ def wrapper(coloring_func, G: Graph, report=True):
     start = perf_counter()
     coloring, number_of_color_used = coloring_func(G)
     stop = perf_counter()
+    time = stop - start
 
     if report:
+        print(f"coloring function: {coloring_func.__name__}")
         print(f"color used: {number_of_color_used}, number of nodes: {len(G)}")
-        print(f"Time taken: {stop - start}")
-
-        print(f"Number of edges: {len(G.edges())}")
+        print(f"Time taken: {time:.3f}s")
         print("")
 
-    return coloring, number_of_color_used
+    return coloring, number_of_color_used, time
