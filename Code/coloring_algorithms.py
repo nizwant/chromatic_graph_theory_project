@@ -1,17 +1,9 @@
 from collections import defaultdict
-import networkx as nx
-import matplotlib.pyplot as plt
+from networkx import Graph
 import random
 
 
-G = nx.erdos_renyi_graph(100, 0.5)
-H = nx.complete_graph(10)
-
-# nx.draw(G, with_labels=True)
-# plt.show()
-
-
-def _greedy(G, order: list, color_with_interchange=False):
+def _greedy(G: Graph, order: list, color_with_interchange=False):
     """
     A greedy coloring algorithm for coloring the nodes of a graph G in order given by list order.
     returns coloring and number of used colors
@@ -40,7 +32,7 @@ def _greedy(G, order: list, color_with_interchange=False):
     return node_colors, max(node_colors.values())
 
 
-def color_node(G, node, node_colors, max_color, color_with_interchange):
+def color_node(G: Graph, node, node_colors, max_color, color_with_interchange):
     # Find the colors of the neighbors of node
     neighbor_colors = set(node_colors.get(neighbor) for neighbor in G.neighbors(node))
     # Find the first available color that is not used by any neighbor
@@ -53,7 +45,7 @@ def color_node(G, node, node_colors, max_color, color_with_interchange):
             return node_colors, max(color, max_color)
 
 
-def random_sequential(G, color_with_interchange=False):
+def random_sequential(G: Graph, color_with_interchange=False):
     # obtain list of nodes in graph G and shuffle it
     order = list(G.nodes())
     random.shuffle(order)
@@ -63,7 +55,7 @@ def random_sequential(G, color_with_interchange=False):
     return coloring, chromatic_number
 
 
-def random_sequential_with_interchange(G):
+def random_sequential_with_interchange(G: Graph):
     return random_sequential(G, color_with_interchange=True)
 
 
@@ -77,11 +69,11 @@ def largest_first(G, color_with_interchange=False):
     return coloring, chromatic_number
 
 
-def largest_first_with_interchange(G):
+def largest_first_with_interchange(G: Graph):
     return largest_first(G, color_with_interchange=True)
 
 
-def smallest_last(G, color_with_interchange=False):
+def smallest_last(G: Graph, color_with_interchange=False):
     degrees_vertices = defaultdict(set)
     min_degree = float("inf")
 
@@ -122,11 +114,11 @@ def smallest_last(G, color_with_interchange=False):
     return coloring, chromatic_number
 
 
-def smallest_last_with_interchange(G):
+def smallest_last_with_interchange(G: Graph):
     return smallest_last(G, color_with_interchange=True)
 
 
-def d_satur(G, color_with_interchange=False):
+def d_satur(G: Graph, color_with_interchange=False):
     n = len(G)
     satur = {i: 0 for i in range(n)}  # We will be dropping colored nodes
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
@@ -152,14 +144,15 @@ def d_satur(G, color_with_interchange=False):
             if neighbor in satur:
                 satur[neighbor] += 1
 
-    return node_colors, max_color
+    coloring, chromatic_number = node_colors, max_color
+    return coloring, chromatic_number
 
 
-def d_satur_with_interchange(G):
+def d_satur_with_interchange(G: Graph):
     return d_satur(G, color_with_interchange=True)
 
 
-def try_interchanging_colors(G, node, node_colors, proposed_color):
+def try_interchanging_colors(G: Graph, node, node_colors, proposed_color):
     best_color = proposed_color
     colors_neighbors = defaultdict(set)
 
@@ -193,8 +186,3 @@ def try_interchanging_colors(G, node, node_colors, proposed_color):
             break
 
     return best_color
-
-
-print(largest_first(G))
-print(largest_first_with_interchange(G))
-print(largest_first_with_interchange(H))
