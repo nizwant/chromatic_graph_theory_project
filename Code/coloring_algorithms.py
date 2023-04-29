@@ -11,7 +11,7 @@ H = nx.complete_graph(10)
 # plt.show()
 
 
-def greedy(G, order: list, color_with_interchange=False):
+def _greedy(G, order: list, color_with_interchange=False):
     """
     A greedy coloring algorithm for coloring the nodes of a graph G in order given by list order.
     returns coloring and number of used colors
@@ -59,7 +59,7 @@ def random_sequential(G, color_with_interchange=False):
     random.shuffle(order)
 
     # use greedy on it
-    coloring, chromatic_number = greedy(G, order, color_with_interchange)
+    coloring, chromatic_number = _greedy(G, order, color_with_interchange)
     return coloring, chromatic_number
 
 
@@ -73,7 +73,7 @@ def largest_first(G, color_with_interchange=False):
     order = sorted(order, key=lambda x: G.degree(x), reverse=True)
 
     # use greedy on it
-    coloring, chromatic_number = greedy(G, order, color_with_interchange)
+    coloring, chromatic_number = _greedy(G, order, color_with_interchange)
     return coloring, chromatic_number
 
 
@@ -116,7 +116,7 @@ def smallest_last(G, color_with_interchange=False):
         order.append(min_degree_vertex)  # Add the removed vertex to the order list
         min_degree += -1
 
-    coloring, chromatic_number = greedy(
+    coloring, chromatic_number = _greedy(
         G, order[::-1], color_with_interchange
     )  # greedy on reverse order
     return coloring, chromatic_number
