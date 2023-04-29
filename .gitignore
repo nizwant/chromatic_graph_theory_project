@@ -3,3 +3,4 @@
 .vscode/settings.json
 Code/__pycache__/graph.cpython-311.pyc
 .DS_Store
+*.pyc

@@ -51,8 +51,8 @@ def random_sequential(G: Graph, color_with_interchange=False):
     random.shuffle(order)
 
     # use greedy on it
-    coloring, chromatic_number = _greedy(G, order, color_with_interchange)
-    return coloring, chromatic_number
+    coloring, number_of_colors_used = _greedy(G, order, color_with_interchange)
+    return coloring, number_of_colors_used
 
 
 def random_sequential_with_interchange(G: Graph):
@@ -65,8 +65,8 @@ def largest_first(G, color_with_interchange=False):
     order = sorted(order, key=lambda x: G.degree(x), reverse=True)
 
     # use greedy on it
-    coloring, chromatic_number = _greedy(G, order, color_with_interchange)
-    return coloring, chromatic_number
+    coloring, number_of_colors_used = _greedy(G, order, color_with_interchange)
+    return coloring, number_of_colors_used
 
 
 def largest_first_with_interchange(G: Graph):
@@ -108,10 +108,10 @@ def smallest_last(G: Graph, color_with_interchange=False):
         order.append(min_degree_vertex)  # Add the removed vertex to the order list
         min_degree += -1
 
-    coloring, chromatic_number = _greedy(
+    coloring, number_of_colors_used = _greedy(
         G, order[::-1], color_with_interchange
     )  # greedy on reverse order
-    return coloring, chromatic_number
+    return coloring, number_of_colors_used
 
 
 def smallest_last_with_interchange(G: Graph):
@@ -144,8 +144,8 @@ def d_satur(G: Graph, color_with_interchange=False):
             if neighbor in satur:
                 satur[neighbor] += 1
 
-    coloring, chromatic_number = node_colors, max_color
-    return coloring, chromatic_number
+    coloring, number_of_colors_used = node_colors, max_color
+    return coloring, number_of_colors_used
 
 
 def d_satur_with_interchange(G: Graph):
