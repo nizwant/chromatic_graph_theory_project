@@ -14,6 +14,8 @@ for i in graph_sizes:
     start = perf_counter()
     for i in range(number_of_repetitions):
         # operation done in random.shuffle
+
+        # maybe remove list creation out of timing
         order = list(list_of_graphs[i].nodes())
         random.shuffle(order)
     stop = perf_counter()
