@@ -142,12 +142,17 @@ def smallest_last_with_interchange(G: Graph, timing_dict):
     return smallest_last(G, timing_dict, color_with_interchange=True)
 
 
-def d_satur(G: Graph, color_with_interchange=False):
+def d_satur(G: Graph, timing_dict, color_with_interchange=False):
     n = len(G)
     satur = {i: 0 for i in range(n)}  # We will be dropping colored nodes
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
     max_color = 1
+
+    timing_list = []
     for i in range(n):
+        # time it
+        timing_list.append([i, perf_counter(), False, None])
+
         nodes = [
             node
             for node, saturation in satur.items()
@@ -159,7 +164,7 @@ def d_satur(G: Graph, color_with_interchange=False):
         node = max(degrees, key=degrees.get)
         # Get node with max degree and color it
         node_colors, max_color = color_node(
-            G, node, node_colors, max_color, color_with_interchange
+            G, node, node_colors, max_color, color_with_interchange, i, timing_list
         )
         # Remove colored node from satur dict
         del satur[node]
@@ -169,8 +174,9 @@ def d_satur(G: Graph, color_with_interchange=False):
                 satur[neighbor] += 1
 
     coloring, number_of_colors_used = node_colors, max_color
-    return coloring, number_of_colors_used
+    timing_dict["coloring"] = timing_list
+    return coloring, number_of_colors_used, timing_dict
 
 
-def d_satur_with_interchange(G: Graph):
-    return d_satur(G, color_with_interchange=True)
+def d_satur_with_interchange(G: Graph, timing_dict):
+    return d_satur(G, timing_dict, color_with_interchange=True)
