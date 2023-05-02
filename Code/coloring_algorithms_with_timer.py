@@ -24,23 +24,41 @@ def _greedy(G: Graph, order: list, timing_dict, color_with_interchange=False):
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
     max_color = 1  # additional variable to help with interchange of colors
 
+    timing_list = []
     # Iterate over the nodes of the graph in given order
-    for node in order:
+    for i, node in enumerate(order):
+        # time it
+        timing_list.append([i, perf_counter(), False, None])
+
+        # color it
         node_colors, max_color = color_node(
-            G, node, node_colors, max_color, color_with_interchange
+            G, node, node_colors, max_color, color_with_interchange, i, timing_list
         )
+
+    timing_dict["coloring"] = timing_list
 
     return node_colors, max(node_colors.values()), timing_dict
 
 
-def color_node(G: Graph, node, node_colors, max_color, color_with_interchange):
+def color_node(
+    G: Graph, node, node_colors, max_color, color_with_interchange, i, timing_list
+):
     # Find the colors of the neighbors of node
     neighbor_colors = set(node_colors.get(neighbor) for neighbor in G.neighbors(node))
     # Find the first available color that is not used by any neighbor
     for color in range(1, len(G) + 1):
         if color not in neighbor_colors:
             if color_with_interchange and color > max_color:  # if new color is needed
+                # time it
+                timing_list.append([i, perf_counter(), True, None])
+                old_color = color
+
+                # try to interchange colors
                 color = try_interchanging_colors(G, node, node_colors, color)
+
+                # time it again
+                timing_list.append([i, perf_counter(), True, old_color != color])
+
             # Assign the color to the node
             node_colors[node] = color
             return node_colors, max(color, max_color)
