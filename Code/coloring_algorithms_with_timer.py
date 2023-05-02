@@ -4,7 +4,7 @@ from time import perf_counter
 import random
 
 
-def _greedy(G: Graph, order: list, color_with_interchange=False):
+def _greedy(G: Graph, order: list, timing_dict, color_with_interchange=False):
     """
     A greedy coloring algorithm for coloring the nodes of a graph G in order given by list order.
     returns coloring and number of used colors
@@ -30,7 +30,7 @@ def _greedy(G: Graph, order: list, color_with_interchange=False):
             G, node, node_colors, max_color, color_with_interchange
         )
 
-    return node_colors, max(node_colors.values())
+    return node_colors, max(node_colors.values()), timing_dict
 
 
 def color_node(G: Graph, node, node_colors, max_color, color_with_interchange):
@@ -46,35 +46,39 @@ def color_node(G: Graph, node, node_colors, max_color, color_with_interchange):
             return node_colors, max(color, max_color)
 
 
-def random_sequential(G: Graph, color_with_interchange=False):
+def random_sequential(G: Graph, timing_dict, color_with_interchange=False):
     # obtain list of nodes in graph G and shuffle it
     order = list(G.nodes())
     random.shuffle(order)
 
     # use greedy on it
-    coloring, number_of_colors_used = _greedy(G, order, color_with_interchange)
-    return coloring, number_of_colors_used
+    coloring, number_of_colors_used, timing_dict = _greedy(
+        G, order, timing_dict, color_with_interchange
+    )
+    return coloring, number_of_colors_used, timing_dict
 
 
-def random_sequential_with_interchange(G: Graph):
-    return random_sequential(G, color_with_interchange=True)
+def random_sequential_with_interchange(G: Graph, timing_dict):
+    return random_sequential(G, timing_dict, color_with_interchange=True)
 
 
-def largest_first(G, color_with_interchange=False):
+def largest_first(G, timing_dict, color_with_interchange=False):
     # obtain list of nodes in graph G and sort it
     order = G.nodes()
     order = sorted(order, key=lambda x: G.degree(x), reverse=True)
 
     # use greedy on it
-    coloring, number_of_colors_used = _greedy(G, order, color_with_interchange)
-    return coloring, number_of_colors_used
+    coloring, number_of_colors_used, timing_dict = _greedy(
+        G, order, timing_dict, color_with_interchange
+    )
+    return coloring, number_of_colors_used, timing_dict
 
 
-def largest_first_with_interchange(G: Graph):
-    return largest_first(G, color_with_interchange=True)
+def largest_first_with_interchange(G: Graph, timing_dict):
+    return largest_first(G, timing_dict, color_with_interchange=True)
 
 
-def smallest_last(G: Graph, color_with_interchange=False):
+def smallest_last(G: Graph, timing_dict, color_with_interchange=False):
     degrees_vertices = defaultdict(set)
     min_degree = float("inf")
 
@@ -109,14 +113,14 @@ def smallest_last(G: Graph, color_with_interchange=False):
         order.append(min_degree_vertex)  # Add the removed vertex to the order list
         min_degree += -1
 
-    coloring, number_of_colors_used = _greedy(
-        G, order[::-1], color_with_interchange
+    coloring, number_of_colors_used, timing_dict = _greedy(
+        G, order[::-1], timing_dict, color_with_interchange
     )  # greedy on reverse order
-    return coloring, number_of_colors_used
+    return coloring, number_of_colors_used, timing_dict
 
 
-def smallest_last_with_interchange(G: Graph):
-    return smallest_last(G, color_with_interchange=True)
+def smallest_last_with_interchange(G: Graph, timing_dict):
+    return smallest_last(G, timing_dict, color_with_interchange=True)
 
 
 def d_satur(G: Graph, color_with_interchange=False):
