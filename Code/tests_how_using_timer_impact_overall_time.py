@@ -1,4 +1,5 @@
 from collections import defaultdict
+from matplotlib import pyplot as plt
 import networkx as nx
 from coloring_algorithms import random_sequential, random_sequential_with_interchange
 from coloring_algorithms import largest_first, largest_first_with_interchange
@@ -16,13 +17,13 @@ def random_sequential_with_timer(G, timing_dict, color_with_interchange=False):
     timing_dict["preparation_end"] = perf_counter()
 
     # use greedy on it
-    coloring, number_of_colors_used = _greedy_with_time(
-        G, order, color_with_interchange
+    coloring, number_of_colors_used, timing_dict = _greedy_with_time(
+        G, order, timing_dict, color_with_interchange
     )
     return coloring, number_of_colors_used, timing_dict
 
 
-def _greedy_with_time(G, order: list, color_with_interchange=False):
+def _greedy_with_time(G, order: list, timing_dict, color_with_interchange=False):
     """
     A greedy coloring algorithm for coloring the nodes of a graph G in order given by list order.
     returns coloring and number of used colors
@@ -42,23 +43,32 @@ def _greedy_with_time(G, order: list, color_with_interchange=False):
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
     max_color = 1  # additional variable to help with interchange of colors
 
+    timing_list = []
     # Iterate over the nodes of the graph in given order
-    for node in order:
+    for i, node in enumerate(order):
         node_colors, max_color = color_node_with_time(
-            G, node, node_colors, max_color, color_with_interchange
+            G, node, node_colors, max_color, color_with_interchange, timing_list, i
         )
+        timing_list.append([i, perf_counter(), False, None])
 
-    return node_colors, max(node_colors.values())
+    timing_dict["coloring"] = timing_list
+    return node_colors, max(node_colors.values()), timing_dict
 
 
-def color_node_with_time(G, node, node_colors, max_color, color_with_interchange):
+def color_node_with_time(
+    G, node, node_colors, max_color, color_with_interchange, timing_list, i
+):
     # Find the colors of the neighbors of node
     neighbor_colors = set(node_colors.get(neighbor) for neighbor in G.neighbors(node))
     # Find the first available color that is not used by any neighbor
     for color in range(1, len(G) + 1):
         if color not in neighbor_colors:
             if color_with_interchange and color > max_color:  # if new color is needed
+                # try to interchange colors
+                timing_list.append([i, perf_counter(), True, None])
+                tmp = color
                 color = try_interchanging_colors(G, node, node_colors, color)
+                timing_list.append([i, perf_counter(), True, tmp != color])
             # Assign the color to the node
             node_colors[node] = color
             return node_colors, max(color, max_color)
@@ -100,18 +110,67 @@ def try_interchanging_colors(G, node, node_colors, proposed_color):
     return best_color
 
 
-G = nx.erdos_renyi_graph(1000, 0.5)
+for i in range(1):
+    G = nx.erdos_renyi_graph(5000, 0.5)
 
-# nx.draw(G, with_labels=True)
-# plt.show()
-
-function_list = [
-    random_sequential,
-    #   random_sequential_with_interchange
-]
-
-for function in function_list:
     timing_dict = defaultdict(float)
-    timing_dict["preparation_start"] = perf_counter()
-    coloring, number, timing_dict = random_sequential_with_timer(G, timing_dict)
-    timing_dict["end_of_coloring"] = perf_counter()
+    timing_dict["start"] = perf_counter()
+    coloring, number, timing_dict = random_sequential_with_timer(
+        G, timing_dict, color_with_interchange=True
+    )
+    timing_dict["end"] = perf_counter()
+    print(timing_dict["end"] - timing_dict["start"])
+
+
+# kolorowanie
+fig, ax = plt.subplots()
+ax.plot(
+    [i[1] for i in timing_dict["coloring"]],
+    [i[0] for i in timing_dict["coloring"]],
+    linewidth=3,
+)
+# for i in timing_dict["coloring"]:
+#     if i[2] and i[3]:
+#         (green_x,) = ax.plot(i[1], i[0], "Xg", markersize=6)
+#     if i[2] and i[3] is not None and not i[3]:
+#         (red_dot,) = ax.plot(i[1], i[0], "or", markersize=6)
+plt.xlabel("time [s]")
+plt.ylabel("node (its like progress)")
+# ax.legend([green_x, red_dot], ["interchange", "new color needed"])
+plt.show()
+
+number = 10000
+start = perf_counter()
+counter = 0
+counter1 = 0
+counter2 = 0
+counter3 = 0
+counter4 = 0
+time = []
+for i in range(number):
+    counter = counter + 1
+    counter1 = counter1 + 1
+    counter2 = counter2 + 1
+    counter3 = counter3 + 1
+    counter4 = counter4 + 1
+    time.append(perf_counter())
+end = perf_counter()
+tmp1 = end - start
+print(end - start)
+
+start = perf_counter()
+counter = 0
+counter1 = 0
+counter2 = 0
+counter3 = 0
+counter4 = 0
+for i in range(number):
+    counter = counter + 1
+    counter1 = counter1 + 1
+    counter2 = counter2 + 1
+    counter3 = counter3 + 1
+    counter4 = counter4 + 1
+end = perf_counter()
+tmp2 = end - start
+print(end - start)
+print(tmp1 - tmp2)
