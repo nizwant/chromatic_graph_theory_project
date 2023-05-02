@@ -111,66 +111,65 @@ def try_interchanging_colors(G, node, node_colors, proposed_color):
 
 
 for i in range(1):
-    G = nx.erdos_renyi_graph(5000, 0.5)
+    G = nx.erdos_renyi_graph(2000, 0.5, seed=42)
 
     timing_dict = defaultdict(float)
     timing_dict["start"] = perf_counter()
-    coloring, number, timing_dict = random_sequential_with_timer(
-        G, timing_dict, color_with_interchange=True
-    )
+    coloring, number = smallest_last(G, color_with_interchange=True)
     timing_dict["end"] = perf_counter()
     print(timing_dict["end"] - timing_dict["start"])
 
 
-# kolorowanie
-fig, ax = plt.subplots()
-ax.plot(
-    [i[1] for i in timing_dict["coloring"]],
-    [i[0] for i in timing_dict["coloring"]],
-    linewidth=3,
-)
-# for i in timing_dict["coloring"]:
-#     if i[2] and i[3]:
-#         (green_x,) = ax.plot(i[1], i[0], "Xg", markersize=6)
-#     if i[2] and i[3] is not None and not i[3]:
-#         (red_dot,) = ax.plot(i[1], i[0], "or", markersize=6)
-plt.xlabel("time [s]")
-plt.ylabel("node (its like progress)")
-# ax.legend([green_x, red_dot], ["interchange", "new color needed"])
-plt.show()
+# # kolorowanie
+# fig, ax = plt.subplots()
+# ax.plot(
+#     [i[1] for i in timing_dict["coloring"]],
+#     [i[0] for i in timing_dict["coloring"]],
+#     linewidth=3,
+# )
+# # for i in timing_dict["coloring"]:
+# #     if i[2] and i[3]:
+# #         (green_x,) = ax.plot(i[1], i[0], "Xg", markersize=6)
+# #     if i[2] and i[3] is not None and not i[3]:
+# #         (red_dot,) = ax.plot(i[1], i[0], "or", markersize=6)
+# plt.xlabel("time [s]")
+# plt.ylabel("node (its like progress)")
+# # ax.legend([green_x, red_dot], ["interchange", "new color needed"])
+# plt.show()
 
-number = 10000
-start = perf_counter()
-counter = 0
-counter1 = 0
-counter2 = 0
-counter3 = 0
-counter4 = 0
-time = []
-for i in range(number):
-    counter = counter + 1
-    counter1 = counter1 + 1
-    counter2 = counter2 + 1
-    counter3 = counter3 + 1
-    counter4 = counter4 + 1
-    time.append(perf_counter())
-end = perf_counter()
-tmp1 = end - start
-print(end - start)
 
-start = perf_counter()
-counter = 0
-counter1 = 0
-counter2 = 0
-counter3 = 0
-counter4 = 0
-for i in range(number):
-    counter = counter + 1
-    counter1 = counter1 + 1
-    counter2 = counter2 + 1
-    counter3 = counter3 + 1
-    counter4 = counter4 + 1
-end = perf_counter()
-tmp2 = end - start
-print(end - start)
-print(tmp1 - tmp2)
+# number = 10_000
+# start = perf_counter()
+# counter = 0
+# counter1 = 0
+# counter2 = 0
+# counter3 = 0
+# counter4 = 0
+# time = []
+# for i in range(number):
+#     counter = counter + 1
+#     counter1 = counter1 + 1
+#     counter2 = counter2 + 1
+#     counter3 = counter3 + 1
+#     counter4 = counter4 + 1
+#     time.append([perf_counter(), None, True])
+# end = perf_counter()
+# tmp1 = end - start
+# print(end - start)
+
+# start = perf_counter()
+# counter = 0
+# counter1 = 0
+# counter2 = 0
+# counter3 = 0
+# counter4 = 0
+# for i in range(number):
+#     counter = counter + 1
+#     counter1 = counter1 + 1
+#     counter2 = counter2 + 1
+#     counter3 = counter3 + 1
+#     counter4 = counter4 + 1
+# end = perf_counter()
+# tmp2 = end - start
+# print(end - start)
+# print(tmp1 - tmp2)
