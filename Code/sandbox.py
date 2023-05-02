@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import networkx as nx
 from coloring_algorithms import random_sequential, random_sequential_with_interchange
 from coloring_algorithms import largest_first, largest_first_with_interchange
