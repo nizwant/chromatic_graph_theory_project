@@ -6,18 +6,20 @@ from coloring_algorithms import smallest_last, smallest_last_with_interchange
 from coloring_algorithms import d_satur, d_satur_with_interchange
 from wrapper import wrapper
 import random
+from time import perf_counter
 
 
-def random_sequential_with_timer(G, color_with_interchange=False):
+def random_sequential_with_timer(G, timing_dict, color_with_interchange=False):
     # obtain list of nodes in graph G and shuffle it
     order = list(G.nodes())
     random.shuffle(order)
+    timing_dict["preparation_end"] = perf_counter()
 
     # use greedy on it
     coloring, number_of_colors_used = _greedy_with_time(
         G, order, color_with_interchange
     )
-    return coloring, number_of_colors_used
+    return coloring, number_of_colors_used, timing_dict
 
 
 def _greedy_with_time(G, order: list, color_with_interchange=False):
@@ -109,4 +111,7 @@ function_list = [
 ]
 
 for function in function_list:
-    coloring, number, time = wrapper(function, G)
+    timing_dict = defaultdict(float)
+    timing_dict["preparation_start"] = perf_counter()
+    coloring, number, timing_dict = random_sequential_with_timer(G, timing_dict)
+    timing_dict["end_of_coloring"] = perf_counter()
