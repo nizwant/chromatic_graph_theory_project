@@ -2,6 +2,7 @@ from collections import defaultdict
 from networkx import Graph
 from time import perf_counter
 import random
+from coloring_algorithms import try_interchanging_colors  # this function doesn't change
 
 
 def _greedy(G: Graph, order: list, timing_dict, color_with_interchange=False):
@@ -173,39 +174,3 @@ def d_satur(G: Graph, color_with_interchange=False):
 
 def d_satur_with_interchange(G: Graph):
     return d_satur(G, color_with_interchange=True)
-
-
-def try_interchanging_colors(G: Graph, node, node_colors, proposed_color):
-    best_color = proposed_color
-    colors_neighbors = defaultdict(set)
-
-    # Iterate over all neighbors of the node in order to create colors_neighbors
-    # dictionary with key:value pairs color:{nodes_that_have_this_color}
-    for neighbor in G.neighbors(node):
-        if neighbor in node_colors:
-            colors_neighbors[node_colors[neighbor]].add(neighbor)
-
-    valid_neighbors = []
-    # select nodes that have unique color in set of neighbor
-    for color, set_of_neighbors in colors_neighbors.items():
-        if len(set_of_neighbors) == 1:
-            valid_neighbors.append([set_of_neighbors.pop(), color])
-
-    breaker = False
-    for valid_neighbor, color in valid_neighbors:
-        colors_neighbor_neighbors = set()
-        for neighbor_of_valid_neighbor in G.neighbors(valid_neighbor):
-            if neighbor_of_valid_neighbor in node_colors:
-                colors_neighbor_neighbors.add(node_colors[neighbor_of_valid_neighbor])
-
-        for i in range(1, proposed_color):
-            if i not in colors_neighbor_neighbors and i != color:
-                node_colors[valid_neighbor] = i
-                best_color = color
-                breaker = True
-                break
-
-        if breaker:
-            break
-
-    return best_color
