@@ -9,3 +9,9 @@ suceeded
 6. Planar graphs
 7. Funkcja wywołująca wszytskie kolorowania i jakieś statystyki pokazująca 
 8. porownanie z klikowa liczba
+
+
+jak chce zrobic napisac zeby podawało czasy, do warppera zwracam słownik i tam będzie
+np przygotowanie i lista czasów albo pojedynczy czas
+i potem faktyczne kolorowanie ale dnp d satur robi to w tym samym czasie
+
