@@ -124,10 +124,11 @@ def d_satur(G: Graph, color_with_interchange=False):
     node_colors = {}  # A dictionary to keep track of the color assigned to each node
     max_color = 1
     for i in range(n):
+        max_satur = max(satur.values())
         nodes = [
             node
             for node, saturation in satur.items()
-            if saturation == max(satur.values())
+            if saturation == max_satur
         ]
         # Looking all max saturation nodes
         degrees = {node: G.degree(node) for node in nodes}
