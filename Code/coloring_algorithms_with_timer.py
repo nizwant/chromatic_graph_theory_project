@@ -153,11 +153,8 @@ def d_satur(G: Graph, timing_dict, color_with_interchange=False):
         # time it
         timing_list.append([i, perf_counter(), False, None])
 
-        nodes = [
-            node
-            for node, saturation in satur.items()
-            if saturation == max(satur.values())
-        ]
+        max_satur = max(satur.values())
+        nodes = [node for node, saturation in satur.items() if saturation == max_satur]
         # Looking all max saturation nodes
         degrees = {node: G.degree(node) for node in nodes}
         # Dict with all max saturation nodes and their degrees
